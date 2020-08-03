@@ -9,6 +9,7 @@ class SliderPage extends StatefulWidget {
 
 class _SliderPageState extends State<SliderPage> {
   double _sliderValue = 300.0;
+  bool _checkBlocked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,12 @@ class _SliderPageState extends State<SliderPage> {
       body: Container(
         padding: EdgeInsets.only(top: 50.0),
         child: Column(
-          children: <Widget>[_createSlider(), Expanded(child: _createImage())],
+          children: <Widget>[
+            _createSlider(),
+            _createCheckbox(),
+            _createSwitch(),
+            Expanded(child: _createImage())
+          ],
         ),
       ),
     );
@@ -29,11 +35,13 @@ class _SliderPageState extends State<SliderPage> {
     return Slider(
       activeColor: Colors.indigoAccent,
       label: 'Tamaño de la imagen',
-      onChanged: (value) {
-        setState(() {
-          _sliderValue = value;
-        });
-      },
+      onChanged: _checkBlocked
+          ? null
+          : (value) {
+              setState(() {
+                _sliderValue = value;
+              });
+            },
       min: 10,
       max: 400,
       value: _sliderValue,
@@ -46,6 +54,38 @@ class _SliderPageState extends State<SliderPage> {
           'https://d.newsweek.com/en/full/1506960/rick-morty-season-4-release-date.png?w=1600&h=1200&q=88&f=d9f346aa64802a3def7f4b22b646cd51'),
       width: _sliderValue,
       fit: BoxFit.contain,
+    );
+  }
+
+  Widget _createCheckbox() {
+    // return Checkbox(
+    //   value: _checkBlocked,
+    //   onChanged: (value) {
+    //     setState(() {
+    //       _checkBlocked = value;
+    //     });
+    //   },
+    // );
+    return CheckboxListTile(
+      title: Text('Bloquear slider'),
+      value: _checkBlocked,
+      onChanged: (value) {
+        setState(() {
+          _checkBlocked = value;
+        });
+      },
+    );
+  }
+
+  Widget _createSwitch() {
+    return SwitchListTile(
+      title: Text('Bloquear slider'),
+      value: _checkBlocked,
+      onChanged: (value) {
+        setState(() {
+          _checkBlocked = value;
+        });
+      },
     );
   }
 }
