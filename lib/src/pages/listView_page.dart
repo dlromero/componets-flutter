@@ -45,15 +45,18 @@ class _ListPageState extends State<ListPage> {
   }
 
   Widget _createList() {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: _numberList.length,
-      itemBuilder: (context, index) {
-        final image = _numberList[index];
-        return FadeInImage(
-            placeholder: AssetImage('data/assets/jar-loading.gif'),
-            image: NetworkImage('https://picsum.photos/seed/$image/500/300'));
-      },
+    return RefreshIndicator(
+      onRefresh: _getPageOne,
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: _numberList.length,
+        itemBuilder: (context, index) {
+          final image = _numberList[index];
+          return FadeInImage(
+              placeholder: AssetImage('data/assets/jar-loading.gif'),
+              image: NetworkImage('https://picsum.photos/seed/$image/500/300'));
+        },
+      ),
     );
   }
 
@@ -98,5 +101,16 @@ class _ListPageState extends State<ListPage> {
     } else {
       return Container();
     }
+  }
+
+  Future<Null> _getPageOne() async {
+    final duration = new Duration(seconds: 2);
+    new Timer(duration, () {
+      _numberList.clear();
+      _lastNumber++;
+      _addTen();
+    });
+
+    return Future.delayed(duration);
   }
 }
